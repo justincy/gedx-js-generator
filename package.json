@@ -1,0 +1,26 @@
+{
+  "name": "gedx-fs-generator",
+  "version": "1.0.0",
+  "description": "Generate class definitions for gedcomx-js based off of gedcomx-json-schema",
+  "main": "index.js",
+  "scripts": {
+    "generate": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/justincy/gedx-js-generator.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/justincy/gedx-js-generator/issues"
+  },
+  "homepage": "https://github.com/justincy/gedx-js-generator#readme",
+  "devDependencies": {
+    "gedcomx-fs-json-schema": "^1.0.0"
+  },
+  "dependencies": {
+    "fs-extra": "^0.30.0",
+    "handlebars": "^4.0.5"
+  }
+}

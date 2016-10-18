@@ -59,8 +59,17 @@ module.exports = function(GedcomX){
     }
     return this;
   };
+  {{#each properties}}
   
-  {{prototypeMethods}}
+    {{#isArrayProperty this}}
+  {{> arrayMethod className=../className propertyName=@key property=this}}
+    {{else isClassProperty this}}
+  {{> classMethod className=../className propertyName=@key property=this}}
+    {{else}}
+  {{> literalMethod className=../className propertyName=@key property=this}}
+    {{/isArrayProperty}}
+    
+  {{/each}}
   
   /**
    * Export the object as JSON

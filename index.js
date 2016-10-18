@@ -10,12 +10,36 @@ fs.removeSync(directory);
 fs.mkdirSync(directory);
 
 // Load templates
-var templates = {
-  'class': Handlebars.compile(fs.readFileSync(__dirname + '/templates/class.js', 'utf8'))
-};
+var classTemplate = Handlebars.compile(fs.readFileSync(__dirname + '/templates/class.js', 'utf8'));
+Handlebars.registerPartial('arrayMethod', fs.readFileSync(__dirname + '/templates/arrayMethod.js', 'utf8'));
+Handlebars.registerPartial('classMethod', fs.readFileSync(__dirname + '/templates/classMethod.js', 'utf8'));
+Handlebars.registerPartial('literalMethod', fs.readFileSync(__dirname + '/templates/literalMethod.js', 'utf8'));
 
 // Register template helpers
 Handlebars.registerHelper('capitalizeFirst', capitalizeFirstLetter);
+Handlebars.registerHelper('refName', nameFromRef);
+Handlebars.registerHelper('singular', function(name){
+  return name.charAt(name.length - 1) === 's' ? name.slice(0, -1) : name;
+});
+Handlebars.registerHelper('isBoolean', function(type, options){
+  if(type === 'boolean'){
+    return options.fn(this);
+  }
+});
+Handlebars.registerHelper('isArrayProperty', function(property, options){
+  if(property.type === 'array'){
+    return options.fn(this);
+  } else {
+    return options.inverse(this);
+  }
+});
+Handlebars.registerHelper('isClassProperty', function(property, options){
+  if(!!property.$ref){
+    return options.fn(this);
+  } else {
+    return options.inverse(this);
+  }
+});
 
 // Iterate over classes
 var className, classOutput;
@@ -29,7 +53,7 @@ for(className in schema.definitions){
   
   // Write to file
   fs.writeFileSync(directory + '/' + className + '.js', classOutput);
-  process.exit();
+  //process.exit();
 }
 
 /**
@@ -40,7 +64,7 @@ for(className in schema.definitions){
 function generateClass(className, schema){
   
   // Fill template
-  return templates.class({
+  return classTemplate({
     className: className,
     baseClass: schema.allOf ? nameFromRef(schema.allOf[0].$ref) : 'Base',
     properties: schema.properties

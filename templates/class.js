@@ -27,7 +27,9 @@ module.exports = function(GedcomX){
   {{className}}._gedxClass = {{className}}.prototype._gedxClass = 'GedcomX.{{className}}';
   
   {{className}}.jsonProps = [
-    {{&jsonProps}}
+    {{#each properties}}
+    '{{@key}}'{{#unless @last}},{{/unless}} 
+    {{/each}}
   ];
   
   /**
@@ -51,7 +53,9 @@ module.exports = function(GedcomX){
     GedcomX.{{baseClass}}.prototype.init.call(this, json);
     
     if(json){
-      {{initMethods}}
+      {{#each properties}}
+      this.set{{capitalizeFirst @key}}(json.{{@key}}); 
+      {{/each}}
     }
     return this;
   };

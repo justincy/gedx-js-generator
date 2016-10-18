@@ -1,6 +1,6 @@
 var fs = require('fs-extra'),
     schema = require('gedcomx-fs-json-schema'),
-    Mustache = require('mustache'),
+    Handlebars = require('handlebars'),
     directory = __dirname + '/out';
 
 // Clear output directory
@@ -11,8 +11,11 @@ fs.mkdirSync(directory);
 
 // Load templates
 var templates = {
-  'class': fs.readFileSync(__dirname + '/templates/class.js', 'utf8')
+  'class': Handlebars.compile(fs.readFileSync(__dirname + '/templates/class.js', 'utf8'))
 };
+
+// Register template helpers
+Handlebars.registerHelper('capitalizeFirst', capitalizeFirstLetter);
 
 // Iterate over classes
 var className, classOutput;
@@ -35,29 +38,12 @@ for(className in schema.definitions){
  * @return {String} generated class definition
  */
 function generateClass(className, schema){
-  var jsonProps = [],
-      initMethods = [],
-      prototypeMethods = [],
-      propertyName,
-      property;
-  
-  initMethods = [];
-  prototypeMethods = [];
-  
-  // Generate jsonProps list
-  jsonProps = Object.keys(schema.properties);
-  
-  // Generate method calls
-  for(propertyName in schema.properties){
-    property = schema.properties[propertyName];
-    // TODO
-  }
   
   // Fill template
-  return Mustache.render(templates.class, {
+  return templates.class({
     className: className,
     baseClass: schema.allOf ? nameFromRef(schema.allOf[0].$ref) : 'Base',
-    jsonProps: `'` + jsonProps.join(`',\r\n    '`) + `'`
+    properties: schema.properties
   });
 }
 
@@ -70,14 +56,11 @@ function nameFromRef(ref){
 }
 
 /**
- * @param {String} template
- * @param {Object} variables
+ * http://stackoverflow.com/a/1026087
+ * 
+ * @param {String} string
  * @return {String}
  */
-function fillTemplate(template, variables){
-  var output = template;
-  for(var name in variables){
-    output = output.replace(new RegExp(`{{${name}}}`, 'g'), variables[name]);
-  }
-  return output;
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }

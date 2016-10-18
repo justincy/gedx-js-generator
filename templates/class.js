@@ -4,7 +4,7 @@ module.exports = function(GedcomX){
    * Class description
    * 
    * @class
-   * @extends Base
+   * @extends {{baseClass}}
    * @param {Object} [json]
    */ 
   var {{className}} = function(json){

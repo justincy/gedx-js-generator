@@ -27,7 +27,7 @@ module.exports = function(GedcomX){
   {{className}}._gedxClass = {{className}}.prototype._gedxClass = 'GedcomX.{{className}}';
   
   {{className}}.jsonProps = [
-    {{jsonProps}}
+    {{&jsonProps}}
   ];
   
   /**

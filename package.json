@@ -21,6 +21,6 @@
   },
   "dependencies": {
     "fs-extra": "^0.30.0",
-    "handlebars": "^4.0.5"
+    "mustache": "^2.2.1"
   }
 }

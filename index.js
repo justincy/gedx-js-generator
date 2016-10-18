@@ -1,5 +1,6 @@
 var fs = require('fs-extra'),
     schema = require('gedcomx-fs-json-schema'),
+    Mustache = require('mustache'),
     directory = __dirname + '/out';
 
 // Clear output directory
@@ -53,7 +54,7 @@ function generateClass(className, schema){
   }
   
   // Fill template
-  return fillTemplate(templates.class, {
+  return Mustache.render(templates.class, {
     className: className,
     baseClass: schema.allOf ? nameFromRef(schema.allOf[0].$ref) : 'Base',
     jsonProps: `'` + jsonProps.join(`',\r\n    '`) + `'`
